@@ -1,0 +1,184 @@
+{% extends 'register/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class='main_mypage'>
+  <div class="profilecard">
+    <div class='date_joined'>
+      <p class="created_date"><span>{{user.date_joined}}</span></p>
+    </div>
+    <div class="profile-header">
+      <img src="{{user.image}}" alt="">
+      <p><span class="user-name">{{user.username}}</span><a href="{% url 'register:user_update' user.pk %}"><img class="edit" src="{% static 'img/pencil.png' %}" alt=""></a></p>
+    </div>
+    <div class='profile-footer'>
+      <p><span class="user-email">Email: {{user.email}}</span></p>
+    </div>
+    <div class='sns_login'>
+      <!-- {% if social == facebook %}
+      <span>Facebook認証済み</span>
+      {% elif social == google %}
+      <span>Google認証済み</span>
+      {% else %} -->
+      <span></span>
+      <!-- {% endif %} -->
+    </div>
+    {% if user.is_staff %}
+      <div class='company_change'>
+        {% for company_id in company %}
+        <button type="button" name="button" class='back change'><a href="{% url 'apps:company_change' %}">会社情報編集</a></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class='password_change'>
+      <button type="button" name="button" class='back change'><a href="{% url 'register:password_change'%}">パスワード変更</a></button>
+    </div>
+  </div>
+  <div class='main_content'>
+  {% if not user.is_staff %}
+   {% if user.is_mail %}
+    {% for tmp in list %}
+       {% for fab_list in fab %}
+          {% if tmp.id == fab_list.article %}
+          <div class="stream">
+            <div class="content">
+              <div class='preview'>
+                {% if 'http' not in tmp.image %}
+                  <img src="/media/{{tmp.image}}" alt="">
+                {% else %}
+                  <img src="{{tmp.image}}" alt="">
+                {% endif %}
+              </div>
+              <div class="stream-header">
+                <p>
+                  <span class="like-time">お気に入り登録:{{fab_list.updated}}</span>
+                  <span class="room-name">{{tmp.name}}</span>
+                  <div class="stream-content">
+                    <span name="comment">{{tmp.comment}}</span>
+                  </div>
+                </p>
+              </div>
+              <div class="inline">
+                <div class="stream-content">
+                  <a href="{% url 'chatroom:index' user.username user.pk fab_list.article %}" >
+                      <div class='profile_img'>
+                          <img src="{{user.image}}" alt="">
+                      </div>
+                  </a>
+                </div>
+              </div>
+              <!-- <div class='outline'>
+                <div class='stream-delete'>
+                  <div class='delete'>
+                    <a href="/mypage/edit/" class="cp_btn"></a>
+                  </div>
+                </div>
+                <div class='stream-delete'>
+                  <div class='delete'>
+                    <a href="/mypage/delete/" class="cp_btn"></a>
+                  </div>
+                </div>
+              </div> -->
+            </div>
+          </div>
+          {% endif %}
+       {% endfor %}
+     {% endfor %}
+    {% endif %}
+  {% else %}
+   {% for live in tmp_article_live %}
+     {% if live.vacancy_info == "0" %}
+       {% for main in tmp_article %}
+         {% if main.id == live.article_id %}
+        <div class="stream">
+          <div class="content">
+            <div class='preview'>
+              {% if 'http' not in main.article_image %}
+                <img src="/media/{{main.article_image}}" alt="">
+              {% else %}
+                <img src="{{main.article_image}}" alt="">      
+              {% endif %}          
+            </div>
+            <div class="stream-header">
+              <p>
+                <span class="like-time">物件登録日:{{main.created_at}}</span>
+                <span class="like-time">物件更新日:{{main.updated_at}}</span>
+                <span class="room-name">{{main.article_name}}</span>
+                <div class="stream-content">
+                  <span name="comment">{{main.comments}}</span>
+                </div>
+              </p>
+            </div>
+            <div class="inline">
+              <div class="stream-content">
+                <div class='profile_img'>
+                
+                  <a href="#">
+                    <img src="{{user.image}}" alt="">
+                  </a>
+
+                </div>
+                <div>
+                  <li class="info_live_li">
+                    <span>空室情報送信</span>
+                    <a href="/send/mail/{{main.article_name}}/" class="send_info_mail">
+                      <span class="info_live_mail">
+                      <!-- <form action="/send/mail/{{main.article_name}}/" method="GET">
+                        <input type="button" name="send_info" class="send_info_mail">
+                      </form> -->
+                      </span>
+                    </a>
+    
+                    <div class="live_info_comment">
+                      <span class="user_mail_send">
+                        空室情報をユーザーに<br>送信しますか？
+                      </span>
+                    </div>
+
+                  </li>
+                </div>
+              </div>
+            </div>
+            <!-- <div class='outline'>
+              <div class='stream-delete'>
+                <div class='delete'>
+                  <a href="/mypage/edit/" class="cp_btn"></a>
+                </div>
+              </div>
+              <div class='stream-delete'>
+                <div class='delete'>
+                  <a href="/mypage/delete/" class="cp_btn"></a>
+                </div>
+              </div>
+            </div> -->
+           </div>
+           <div class='customer_list'>
+            <ul>
+            {% for user_info in tmp_user %}
+              {% if user_info.is_mail %}
+               {% if user_info.id != user.id %}
+                <a href="{% url 'chatroom:index' user.username user_info.pk main.id %}">
+                  <li class='cus_list '>
+                    <span>{{user_info.username}}</span>
+                    <img src="{{user_info.image}}" alt="">
+                  </li>
+                </a>
+               {% endif %}
+              {% endif %}
+             {% endfor %}
+            </ul>
+          </div>
+         </div>
+      
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+   {% endfor %}
+  {% endif %}
+  </div>
+</div>
+
+{% endblock %}

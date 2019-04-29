@@ -1,0 +1,42 @@
+{% extends "company/base.html" %}
+{% block content %}
+<div class="article">
+  <div class="form_company">
+    <main id="profile_edit">
+      <div class="logo">
+        <p class="logo text">roomii <br> 【業者登録】</p>
+      </div>
+      <form id='company_form' action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="error">
+          <span class="error_meaasage" id="username_error"></span>
+        </div>
+        <div class="preview">
+          <img class="sample_img" src="/media/living.jpg" alt="">
+        </div>
+        {{ form.non_field_errors }}
+        {% for field in form %}
+        <table class="form-company">
+          <tbody>
+            <tr>
+              <th>{{ field.label_tag }}</th>
+              <td>{{ field }}{{ field.errors }}</td>
+            </tr>
+          </tbody>
+        </table>
+        {% endfor %}
+        <button type="submit" class="btn btn-success btn-lg btn-block">登録</button>
+        <div classs="comment">
+          <ul class="note">
+            <li class="title">【ご登録に関して、注意事項】</li>
+            <li>全ての項目入力してください</li>
+            <li>画像ファイルは" .jpeg, .png, .jpg "のみ登録可能です</li>
+            <li>郵便番号はハイフン(-)を除いてください</li>
+          </ul>
+        </div>
+      </form>
+    </main>
+  </div>
+</div>
+
+{% endblock%}

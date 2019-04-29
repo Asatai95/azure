@@ -1,0 +1,315 @@
+{% extends "company/base.html" %}
+{% block content %}
+{% load static %}
+<div class="article">
+  <div class="form contents">
+    <main id="profile_edit">
+      <div class="logo">
+        <p class="logo text">roomii <br> 【物件情報更新】</p>
+      </div>
+      {% for view in list_view %}
+      {{view}}
+      <form action="" method="POST" enctype="multipart/form-data">
+        <div class="error">
+          <span class="error_meaasage" id="username_error"></span>
+        </div>
+        <div class="preview">
+          {% if 'http' not in view.article_image %}
+            <img class="sample_img" src="/media/{{view.article_image}}" alt="">
+          {% else %}
+            <img class="sample_img" src="{{view.article_image}}" alt="">
+          {% endif %}
+        </div>
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_article_image">メイン画像</label>
+              </th>
+              <td><input type="hidden" name="article_image_hidden" value="{{view.article_image}}"></td>
+              <td><input type="file" name="article_image" class="form-control" id="id_article_image"></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_article_name">名称</label>
+              </th>
+              <td>
+                <input type="text" name="article_name" required="" class="form-control" id="id_article_name" maxlength="150" value='{{view.article_name}}'>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_comments">キャッチコピー</label>
+              </th>
+              <td>
+                <input type="text" name="comments" required="" class="form-control" id="id_comments" maxlength="150" value='{{view.comments}}'>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_address">〒郵便番号</label>
+              </th>
+              <td>
+                <input type="text" name="address_number" required="" class="form-control" id="id_address_number" maxlength="150" value='{{view.address_number}}'>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_address">住所</label>
+              </th>
+              <td>
+                <input type="text" name="address" class="form-control" id="id_address" maxlength="150" value='{{view.address}}'>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_rent">家賃</label>
+              </th>
+              <td>
+                <input type="text" name="rent" class="form-control" id="id_rent" maxlength="150" value="{{view.rent}}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_park">駐車場</label>
+              </th>
+              <td>
+                <select name="park" class="form-control" id="id_park">
+                  <option value="" selected="">選択肢から選んでください</option>
+
+                  <option value="駐車場あり">あり</option>
+
+                  <option value="駐車場なし">なし</option>
+
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_floor_plan">間取り</label>
+              </th>
+              <td>
+                <select name="floor_plan" class="form-control" id="id_floor_plan">
+                  <option value="" selected="">選択肢から選んでください</option>
+
+                  <option value="1L">1L</option>
+
+                  <option value="1DK">1DK</option>
+
+                  <option value="1LDK">1LDK</option>
+
+                  <option value="1D">1D</option>
+
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_floor_number">階数</label>
+              </th>
+              <td>
+                <select name="floor_number" class="form-control" id="id_floor_number">
+                  <option value="" selected="">選択肢から選んでください</option>
+
+                  <option value="1F">1F</option>
+
+                  <option value="2F">2F</option>
+
+                  <option value="3F">3F</option>
+
+                  <option value="4F">4F</option>
+
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_initial_cost">初期費用</label>
+              </th>
+              <td>
+                <input type="text" name="initial_cost" required="" class="form-control" id="id_initial_cost" maxlength="150" value="{{view.initial_cost}}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_common_service_expense">共益費</label>
+              </th>
+              <td>
+                <input type="text" name="common_service_expense" required="" class="form-control" id="id_common_service_expense" maxlength="150" value="{{view.common_service_expense}}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_term_of_contract">契約期間</label>
+              </th>
+              <td>
+                <input type="text" name="term_of_contract" required="" class="form-control" id="id_term_of_contract" maxlength="150" value="{{view.term_of_contract}}">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_column">備考</label>
+              </th>
+              <td>
+                <textarea name="column" class="form-control" required="" cols="40" id="id_column" rows="10" maxlength="150">{{view.column}}</textarea>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_files">その他の画像</label>
+              </th>
+              <td>
+                <input type="hidden" name="files_hidden" multiple="" value="{{view.room_images_id}}">
+                <input type="file" name="files" class="form-control" id="id_files" multiple="">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <table class="form-article">
+          <tbody>
+            <tr>
+              <th>
+                <label for="id_live_flag">空室情報</label>
+              </th>
+              <td>
+                <select name="live_flag" class="form-control" id="id_live_flag">
+                  <option value="" selected="">選択肢から選んでください</option>
+
+                  <option value="0">空室です</option>
+
+                  <option value="1">空室ではないです</option>
+
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        {% for live in live_list %}
+        {% if live.start_date %}
+        <div class="vacant">
+          <div class="calendar">
+            <div class="start_date">
+              <label for="start_date">契約開始日</label>
+              <input name="start_date" type="date" min="2019-01-01" max="2020-12-31" value="{{live.start_date}}">
+            </div>
+            <div class="update_date">
+              <label for="update_date">更新予定日</label>
+              <input name="update_date" type="date" min="2019-01-01" max="2020-12-31" value="{{live.update_date}}">
+            </div>
+            <div class="cancel_date">
+              <label for="cancel_date">解約予定日</label>
+              <input name="cancel_date" type="date" min="2019-01-01" max="2020-12-31" value="{{live.cancel_date}}">
+            </div>
+          </div>
+          <div class="vacant_live">
+            <label for="info">空室理由 (例:現在入居中, リフォーム中)</label>
+            <input type="text" name="info" value="">
+          </div>
+        </div>
+        {%else%}
+        <div class="vacant">
+          <div class="calendar">
+            <div class="start_date">
+              <label for="start_date">契約開始日</label>
+              <input name="start_date" type="date" min="2019-01-01" max="2020-12-31" value="">
+            </div>
+            <div class="update_date">
+              <label for="update_date">更新予定日</label>
+              <input name="update_date" type="date" min="2019-01-01" max="2020-12-31" value="" >
+            </div>
+            <div class="cancel_date">
+              <label for="cancel_date">解約予定日</label>
+              <input name="cancel_date" type="date" min="2019-01-01" max="2020-12-31" value="" />
+            </div>
+          </div>
+          <div class="vacant_live">
+            <label for="info">空室理由 (例:現在入居中, リフォーム中)</label>
+            <input type="text" name="info" value="{{live.vacancy_live}}" >
+          </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-success btn-lg btn-block">更新</button>
+        <!-- <div classs="comment">
+          <ul class="note">
+            <li class="title">【ご登録に関して、注意事項】</li>
+            <li>全ての項目入力してください</li>
+          </ul>
+        </div> -->
+      </form>
+      {% endfor %}
+    </main>
+  </div>
+</div>
+
+
+{% endblock %}

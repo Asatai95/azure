@@ -1,0 +1,8 @@
+.DS_Store
+test.py
+user.py
+test.txt
+/django
+credentials
+client_id.json
+/mysite/client_id.json

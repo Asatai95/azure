@@ -1,0 +1,508 @@
+<!doctype html>
+{% load static %}
+<html lang="ja">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+  <link rel="stylesheet" media="screen and (min-width: 436px)" href="{% static 'css/index.css' %} " />
+  <link rel="stylesheet" media="screen and (max-width: 435px)" href="{% static 'css/index_sp.css' %} " />
+
+
+  <title>roomii</title>
+</head>
+
+<body>
+
+  <!-- ナビバー -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    {% if user.is_authenticated %}
+      <a class="navbar-brand" href="{% url 'apps:top' %}">roomii</a>
+    {% else %}
+      <a class="navbar-brand" href="{% url 'apps:top' %}">roomii</a>
+    {% endif %}
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        {% if user.is_staff is False %}
+          {% if user.is_authenticated %}
+          <li>
+            <a class="nav-item nav-link" href="{% url 'register:top'%}">TOP</a>
+          </li>
+          <li>
+            <a class="nav-item nav-link" href="{% url 'register:user_detail' user.username user.pk %}">マイページ</a>
+          </li>
+          <li>
+            <a class="nav-item nav-link" href="{%url 'register:logout' %}">ログアウト</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="{% url 'register:login' %}">
+               ゲストログインはこちら
+            </a>
+      
+          </li>
+          {% endif %}
+        {% else %}
+          {% if user.is_authenticated %}
+          <li>
+            <a class="nav-item nav-link btn_sidebar" data-action="toggle" data-side="left" href="javascript:void(0)">ダッシュボード</a>
+          </li>
+          <li>
+            <a class="nav-item nav-link" href="{% url 'register:top'%}">TOP</a>
+          </li>
+          {% if user.is_company %}
+          <li>
+            <a class="nav-item nav-link" href="{% url 'apps:company_change' %}">業者情報編集</a>
+          </li>
+          {% else%}
+          {% endif %}
+          {% if count_over %}
+            <li>
+              <a class="nav-item nav-link" href="{% url 'apps:company' %}">物件登録</a>
+            </li>
+          {% else %}
+            <li>
+              <a class="nav-item nav-link" href="{% url 'apps:company' %}">アップグレード</a>
+            </li>
+          {% endif %}
+          <li>
+            <a class="nav-item nav-link" href="{% url 'register:user_detail' user.username user.pk %}">マイページ</a>
+          </li>
+          <li>
+            <a class="nav-item nav-link" href="#">メッセージBox</a>
+          </li>
+          <li>
+            <a class="nav-item nav-link" href="{%url 'register:logout' %}">ログアウト</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-item nav-link" href="{% url 'register:login' %}">
+               ゲストログインはこちら
+            </a>
+            
+          </li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  {% if user.is_authenticated %}
+  {% if info_side_bar %}
+  <aside class="sidebar left">
+      <a href="javascript:void(0)" class='btn_sidebar' data-action="toggle" data-side="left">
+          <img src="{% static 'img/Untitled1.png' %}" alt="">
+        </a>
+    <h1 id="brand-logo">roomii</h1>
+    <nav id="global-nav">
+        <ul>
+          {% if user.is_authenticated %}
+            <li><a href="{% url 'register:top'%}">TOP</a></li>
+            {% if user.is_company %}
+            <li><a href="{% url 'apps:company_change' %}">業者情報編集</a></li>
+            {%else%}
+            {% endif %}
+            {% if count_over %}
+              <li><a href="{% url 'apps:company' %}">物件登録</a></li>
+            {% else %}
+              <li><a href="{% url 'apps:company' %}">アップグレード</a></li>
+            {% endif %}
+            <li><a href="{% url 'register:user_detail' user.username user.pk %}">マイページ</a></li>
+            <li><a href="#">メッセージBOX</a></li>
+            <li><a href="{% url 'register:logout' %}">ログアウト</a></li>
+          {% else %}
+            <li><a href="{% url 'register:login' %}">ゲストログインはこちら</a></li>
+          {% endif %}
+        </ul>
+    </nav> 
+  </aside>
+  {% endif %}
+  {% endif %}
+  
+      {% block content %}{% endblock %}
+  <!-- Optional JavaScript -->
+  <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-sidebar/3.1.0/jquery.sidebar.min.js"></script>
+  <script src="https://ajaxzip3.github.io/ajaxzip3.js" charset="UTF-8"></script>
+  <script src="{% static 'js/jquery.inview-master/jquery.inview.js' %}"></script>
+  <script src="{% static 'js/jquery-scrollfade-master/jquery.scrollfade.js' %}"></script>
+  <link rel="stylesheet" type="text/css" href="{% static 'js/slick.css' %}"/>
+  <link rel="stylesheet" type="text/css" href="{% static 'js/slick-theme.css' %}"/>
+  <script type="text/javascript" src="{% static 'js/slick.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/main.js' %}"></script>
+
+<script>
+
+        $(function(){
+          $('input[type=button]').click(function(){
+            $('form').submit();
+          });
+        });
+        var user_id = {{user_id}};
+        var article_id = {{article_id}};
+        var user_name = "{{user.username}}";
+        // var image_file_path = "image"
+
+        // try {
+        //   var chatSocket = new WebSocket(
+        //       'ws://127.0.0.1:3031/ws/chat/'+ user_name + '/' + user_id + '/' + article_id + '/' );
+        // } catch {
+        //   var chatSocket = new WebSocket(
+        //       'ws://127.0.0.1:3031/ws/chat/'+ user_name + '/' + user_id + '/' + article_id + '/' + image_file_path );
+        // }
+
+        try {
+          var chatSocket = new WebSocket(
+              'wss://roomii.jp/ws/chat/'+ user_name + '/' + user_id + '/' + article_id + '/' );
+        } catch {
+          var chatSocket = new WebSocket(
+              'wss://roomii.jp/ws/chat/'+ user_name + '/' + user_id + '/' + article_id + '/' + image_file_path );
+        }
+        
+        console.log({{user_id}})
+
+        var session_user_id = String({{session_user_id}})
+        console.log(typeof session_user_id)
+
+        if ("{{user.is_staff}}" == "False" ) {
+          chatSocket.onmessage = function(e) {
+            $(function(){
+              $('.chat_room > #chat-message-submit').attr('disabled', 'disabled');
+	    });
+	    var data = JSON.parse(e.data);
+            var message = data['message'];
+            console.log(message) 
+            var display_msg_right = document.getElementsByClassName("msg-right");
+            var display_msg = document.getElementsByClassName("chat_room_contents");
+            var msg = document.getElementById("msg");
+            var chat_room = document.getElementsByClassName("chat_room");
+	    var hr = document.getElementsByClassName("hr")
+	    console.log(hr)
+            var msg_room = document.getElementsByClassName("msg_room");
+            var chat_room = document.getElementsByClassName("msg_chat_li");
+	    var fk = document.getElementsByClassName("chat_msg fk add");
+	    console.log(fk)
+	    try {
+                 var add_msg = document.getElementsByClassName("add")
+	    }catch{
+	    
+	    }
+
+            // var get_msg_u = document.getElementsByClassName("msg")
+            // console.log(get_msg_u)
+            // console.log(get_msg_u[0])
+            // if ( get_msg_u[0] == undefined) {
+            //   console.log("test")
+            // } else {
+            //   console.log("tttxca")
+            // }                                
+            string = "u"   
+            try {                             
+              if (message.indexOf(string) > -1 ){  
+                var message = message.replace(" u", "").replace("u", "")                                                    
+                try {
+                  console.log("user try1")
+                  if (session_user_id == user_id) { 
+                    console.log("user try1 session_user_id")
+                    display_msg[0].insertAdjacentHTML('beforeend', 
+                      "<div id='msg' class='msg-right hr user'><ul id='chat_test'><li id='ontime' class='chat_msg right'><textarea readonly id = 'chat-log' class='chat-log-right'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>"
+                    )
+	          $(function(){
+                    $('.chat_room_contents').delay(100).animate({
+                      scrollTop: $('.chat_room_contents')[0].scrollHeight
+                    },1500);
+                  });  
+                  } else {
+			  console.log("user try2")
+                          display_msg[0].insertAdjacentHTML('beforeend',
+				  "<div id='msg'><ul><li class='chat_msg fk'><textarea  id='chat-other' >"+message+"</textarea></li></ul></div>"
+                          ) 
+                  }
+            
+                } catch {
+                  console.log("user catch1")
+                  var message = message.replace(" c", "").replace("c", "")
+                  display_msg[0].insertAdjacentHTML('beforeend', 
+                            "<div id='msg' class='msg-right hr'><ul id='chat_test'><li id='ontime' class='chat_msg right'><textarea readonly id = 'chat-log' class='chat-log-right'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>");
+                }
+              }
+            } catch {
+	      var message = data['message_cm'];
+	      console.log(message)
+	      console.log("false now")
+              var message = message.replace(" c", "").replace("c", "")
+              console.log(message)
+              display_msg[0].insertAdjacentHTML('beforeend', 
+                     "<div id='msg' class='add_msg'>{% for info in view %}{% if 'http' not in info.company_image %}<img src='../../../../../media/{{info.company_image}}' alt=''>{% else %}<img src='{{info.company_image}}' alt=''>{% endif %}{% endfor %}<ul><li class='chat_msg fk add'><textarea id='chat-other'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>"
+              )
+              $(function(){
+                $('.chat_room_contents').delay(100).animate({
+                    scrollTop: $('.chat_room_contents')[0].scrollHeight
+                },1500);
+              });
+            }
+
+	          try{
+                document.querySelector('#chat-message-input-u').focus();
+                //document.querySelector('#chat-message-input-u').onkeyup = function(e) {
+                //    if (e.keyCode === 13) {  // enter, return
+                //       document.querySelector('#chat-message-submit').click()
+                //    }
+                //};
+                $(function(){
+                  $("#chat-message-submit").keydown(function(e){
+                    if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                      return false;  
+                    }else {
+                      return true;	
+                    }
+                  });
+                });
+              
+            } catch {
+                  document.querySelector('#chat-message-input-c').focus();
+                  //document.querySelector('#chat-message-input-c').onkeyup = function(e) {
+                  //    if (e.keyCode === 13) {  // enter, return
+                  //        document.querySelector('#chat-message-submit').click();
+                  //    }
+                  //}
+                  $(function(){
+                    $("#chat-message-submit").keydown(function(e){
+                      if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                        return false;
+                      }else {
+                        return true;
+                      }
+                    });
+                  });
+                }
+                  // var element = document.getElementById("hr-next");
+                  // var positionY = element.offsetTop; 
+                  // element.scrollTo(0, positionY);
+
+
+                $(function(){
+                  $(".chat_room_contents").each(function(){
+                    $(this).find("#chat-message-submit").on("click", function(){
+                      if ($(".msg-right.hr").length) {
+                        $("html, body").animate({scrollTop: $(".msg-right.hr").offset().top + 500});
+                      
+                        var scrollBottom = $(window).scrollTop() + $(window).height();
+                          
+                          // var target = $(".msg-right.hr");
+                          // $(window).scrollTo(0, target.offset());
+                          // console.log($(window).scrollTop(target.offset().top))
+                      } else {
+                        $("html,body").animate({scrollTop:$(this).find(".msg-right").offset().top});
+                      }
+                    });
+                  });
+                });
+              };
+        } else {
+          console.log("else company")
+          chatSocket.onmessage = function(e) {
+	    $(function(){
+              $('.chat_room > #chat-message-submit').attr('disabled', 'disabled');
+            });
+            var data = JSON.parse(e.data);
+            var message = data['message_cm'];
+            
+            var display_msg_right = document.getElementsByClassName("msg-right");
+            var display_msg = document.getElementsByClassName("chat_room_contents");
+            var get_msg_u = document.getElementsByClassName("msg-u")
+            var msg = document.getElementById("msg");
+            string = "c"         
+            try {                       
+              if (message.indexOf(string) > -1 ){
+                var message = message.replace(" c", "").replace("c", "")
+                try {
+                  console.log("try2 company")
+      
+                  if (user_id != session_user_id) {
+                    console.log("try2 company session_user_id")
+                    display_msg_right[0].parentNode.insertAdjacentHTML('beforeend', 
+                      "<div id='msg' class='msg-right hr com'><ul id='chat_test'><li id='ontime' class='chat_msg right'><textarea readonly id = 'chat-log' class='chat-log-right'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>"
+                    )
+	           $(function(){
+                     $('.chat_room_contents').delay(100).animate({
+                        scrollTop: $('.chat_room_contents')[0].scrollHeight
+                     },1500);
+                   });
+                  }
+                
+            
+                } catch {
+		  console.log(message)
+		  var message = message.replace(" u", "").replace("u", "")
+                  console.log("catch2 company")
+                  display_msg[0].insertAdjacentHTML('beforeend', 
+                            "<div id='msg' class='msg-right hr'><ul id='chat_test'><li id='ontime' class='chat_msg right'><textarea readonly id = 'chat-log' class='chat-log-right'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>");
+                }
+              }
+            } catch {
+	      try {
+	        var message = data['message'];
+                console.log(message)
+                var message = message.replace(" u", "").replace("u", "")
+                display_msg_right[0].parentNode.insertAdjacentHTML('beforeend', 
+		        "<div id='msg' class='msg_chat_li'>{% for user_info in view %}<img src='{{user_info.image}}' alt=''>{% endfor %}<ul><li class='chat_msg fk'><textarea id='chat-other'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>"
+                )
+	        $(function(){
+	          $('.chat_room_contents').delay(100).animate({
+                      scrollTop: $('.chat_room_contents')[0].scrollHeight
+                  },1500);
+	        });
+	      }catch {
+	        var message = data['message'];
+                console.log(message)
+                var message = message.replace(" u", "").replace("u", "")
+                display_msg[0].insertAdjacentHTML('beforeend',
+                        "<div id='msg' class='msg_chat_li'>{% for user_info in view %}<img src='{{user_info.image}}' alt=''>{% endfor %}<ul><li class='chat_msg fk'><textarea id='chat-other'>"+message+"</textarea></li></ul></div><div id='hr-next'></div>"
+                )
+                $(function(){
+                  $('.chat_room_contents').delay(100).animate({
+                      scrollTop: $('.chat_room_contents')[0].scrollHeight
+                  },1500);
+                });
+	      }
+            }
+            var element = document.getElementById("hr-next");
+            var positionY = element.offsetTop; 
+            element.scrollTo(0, positionY);
+
+
+            $(function(){
+              $(".chat_room_contents").each(function(){
+                $(this).find("#chat-message-submit").on("click", function(){
+                  if ($(".msg-right.hr").length) {
+                    $("html, body").animate({scrollTop: $(".msg-right.hr").offset().top + 500});
+                  
+                    var scrollBottom = $(window).scrollTop() + $(window).height();
+                    
+                    // var target = $(".msg-right.hr");
+                    // $(window).scrollTo(0, target.offset());
+                    // console.log($(window).scrollTop(target.offset().top))
+                  } else {
+                    $("html,body").animate({scrollTop:$(this).find(".msg-right").offset().top});
+                  }
+                });
+	            });
+            });
+          };
+        };
+
+    
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+            console.error("Close Reason = " + e.reason);
+        };
+
+        try{
+          document.querySelector('#chat-message-input-u').focus();
+          //document.querySelector('#chat-message-input-u').onkeyup = function(e) {
+          //    if (e.keyCode === 13) {  // enter, return
+          //       document.querySelector('#chat-message-submit').click();
+          //    }
+	        //};
+          $(function(){
+            $("#chat-message-submit").keydown(function(e){
+              if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                return false;  
+              }else {
+                return true;	
+              }
+            });
+          });
+         
+        } catch {
+          document.querySelector('#chat-message-input-c').focus();
+          //document.querySelector('#chat-message-input-c').onkeyup = function(e) {
+          //    if (e.keyCode === 13) {  // enter, return
+          //        document.querySelector('#chat-message-submit').click();
+          //    }
+          //};
+	        $(function(){
+            $("#chat-message-submit").keydown(function(e){
+              if ((e.which && e.which === 13) || (e.keyCode && e.keyCode === 13)) {
+                return false;
+              }else {
+                return true;
+              }
+            });
+          });
+        }
+    
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+          try {
+            var messageInputDom = document.querySelector('#chat-message-input-u');
+            // var messageInputDom = document.querySelector('#chat-message-input-u');
+            var message = messageInputDom.value;
+            var message = message + "u"
+            console.log(message)
+	    if (message == ""){
+              return false
+            }
+            
+            chatSocket.send(JSON.stringify({
+                'message': message, 
+            }))
+
+          } catch {
+            var messageInputDom = document.querySelector('#chat-message-input-c');
+          
+            // var messageInputDom = document.querySelector('#chat-message-input-u');
+            var message_cm = messageInputDom.value;
+            var message_cm = message_cm + "c"
+            console.log(message_cm)
+            if (message_cm == ""){
+              return false
+            }
+            
+            chatSocket.send(JSON.stringify({
+                'message_cm': message_cm, 
+            }))
+          }
+              //var imageInputDom = document.querySelector('#chat_img_preview');
+              //var image = imageInputDom.value;
+              //console.log(image)
+              
+          var scroll = document.getElementsByClassName("chat_room_contents")
+          scroll[0].scrollTop = scroll[0].scrollHeight;
+              
+          messageInputDom.value = '';
+        
+        };
+
+        // document.querySelector('#chat-image-submit').onclick = function(e) {
+        //     var imageInputDom = document.querySelector('#chat_img_preview');
+        //     console.log(imageInputDom);
+        //     var image = imageInputDom.file;
+        //     console.log(image);
+        //     // var image = image.replace(/^.*(\\|\/|\:)/, '');
+        //     // console.log(image)
+        //     // chatSocket.send(JSON.stringify({
+        //     //     'image': image
+        //     // }));
+        //     // messageInputDom.value = '';
+            
+        // };
+
+        
+</script>
+
+</body>
+</html>
+
+
+

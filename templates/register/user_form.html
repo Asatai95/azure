@@ -1,0 +1,87 @@
+{% extends 'register/base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<div class='main mypage'>
+  <div class="contents mypage">
+    <div class='title'>
+      <p class='text'>プロフィール編集画面</p>
+    </div>
+    <form class="col s12" action="" method="POST" enctype="multipart/form-data" data-validate/>
+      <div class='error edit'>
+        <span>{{ form.non_field_errors }}{{error}}</span>
+      </div>
+      <div class="input_file">
+        <p class='input_file_tittle'>プロフィール画像</p>
+        <div class="file">
+          <div class="preview">
+            <img class='sample_img' src="{{user.image}}" alt="">
+          </div>
+          <input type="hidden" name='user_img' value="{{user.image}}">
+          <input id="imgFile" type="file" name='img_file' accept="image/png,image/jpeg,image/jpg" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <label for="edit_name">ユーザー名</label>
+          <input id="name" name="username" type="text" class="validate edit" value={{user.username}} required/>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" class="validate edit" value="{{user.email}}" required/>
+          <div class='error_fild'>
+          {% for field in form %}
+          {{ field.errors }}
+          {% endfor %}
+        </div>
+        </div>
+      </div>
+
+      {% if not user.is_staff %}
+      <div class='switch-button'>
+        {% if user.is_mail %}
+          <span class="get_not_info">空室情報を受け取る</span>
+        {% else %}
+          <span class="get_not_info">空室情報を受け取らない</span>
+        {% endif %}
+        <div class="switch">
+            
+            <label class="switch__label">
+              {% if user.is_mail %}
+                <input id="checkbutton" type="hidden" name="checkbox_switch_button" class="checkbox_switch" value="1">
+                <input type="checkbox" class="switch__input" checked="checked" />
+              {% else %}
+                <input id="checkbutton" type="hidden" name="checkbox_switch_button" class="checkbox_switch_hidden" value="0">
+                <input type="checkbox" class="switch__input" />
+              {% endif %}
+              
+              <span class="switch__content"></span>
+              <span class="switch__circle"></span>
+            </label>
+        </div>
+    
+      </div>
+      {% endif %}
+  
+
+      {% csrf_token %}
+      <div class='button'>
+        <input type="submit" id='submit' value="編集完了" disabled/>
+        <button class='back' type="button"><a href="#" onclick="javascript:window.history.back(-1);return false;">戻る</a></button>
+      </div>
+      <div class='point'>
+        <p class='point_title'>【プロフィール画像について】</p>
+        <p class='point_message'>※画像ファイルは、.jpeg, .png, .jpgのみ登録可能です</p>
+        <p class='point_message'>※画像ファイルは、10MB以内の容量のみ登録可能です</p>
+      </div>
+
+    </form>
+  </div>
+</div>
+
+{% endblock %}

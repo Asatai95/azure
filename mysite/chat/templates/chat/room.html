@@ -1,0 +1,189 @@
+{% extends 'chat/base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="main_chat_room">
+        <div class='test'></div>
+        {% if not user.is_staff %}
+            <div class='users'>
+                {% for info in view %}
+                <div class='users_profile'>
+                    <div>
+                        {% if 'http' not in info.company_image %}
+                            <img src="../../../../../media/{{info.company_image}}" alt="">
+                        {% else %}
+                            <img src="{{info.company_image}}" alt="">
+                        {% endif %}
+                    </div>
+                    <div>
+                        <ul>
+                            <li>
+                               {{info.company_name}}
+                              
+                            </li>
+                            <li>
+                                <span>メールアドレス</span> </br>
+                                {{info.email}}
+                            </li>
+                            <li>
+                                <span>電話番号</span> </br>
+                                {{info.tel_number}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class='users'>
+                {% for user_info in view %}
+                <div class='users_profile'>
+                    <div>
+                        <img src="{{user_info.image}}" alt="">
+                    </div>
+                    <div>
+                        <ul>
+                            <li>{{user_info.username}}</li>
+                            <li>
+                                <span>メールアドレス</span></br>
+                                {{user_info.email}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if not user.is_staff  %}
+            <div class="main_room">
+                    <!-- <div id="room">チャットルーム</div> -->
+                    <div class='chat_room_contents'>   
+                                {% if chat %}
+                                    {% for talk in chat %}
+                                        {% for article_info in view %}
+                                          {% if user.username != talk.from_person %}  
+                                          <div id="msg">
+                                      
+                                          {% for info in view %}
+                                            {% if 'http' not in info.company_image %}
+                                              <img src="../../../../../media/{{info.company_image}}" alt="">
+                                            {% else %}
+                                                <img src="{{info.company_image}}" alt="">
+                                            {% endif %}
+                                          {% endfor %}
+                                            <ul>                                           
+                                              <li class="chat_msg fk"> 
+                                                  <textarea  id="chat-other" >{{talk.chat}}</textarea>
+                                              </li>
+                                            </ul>
+                                          </div>  
+                                          {% endif %}
+                                        {% endfor %}
+                                        
+                                      {% if user.username == talk.from_person %}
+                                     
+                                        <div id="msg" class="msg-right">
+                                    
+                                          <ul id="chat_test">
+                                               
+                                                <li id='ontime' class="chat_msg right"> 
+                                                    <textarea readonly class="chat-log-right">{{talk.chat}}</textarea>
+                                                </li>
+                                          </ul>
+                                   
+                                        </div>
+                                        
+                                        {% endif %}
+                                    {% endfor %}
+				    <div class="hr"></div>  
+                                       
+                                
+                                    
+                                {% else %}
+                                    
+                                {% endif %}
+                                    
+                                    <div class="chat_room">
+                                        <div class='add-image'>       
+                                            <span>
+                                                <label for="icon">                                        
+                                                    <input id="chat_img_preview" type="file" name="icon" accept="image/png, image/jpeg, image/jpg" onchange="$('#icon-hidden').val($(this).val())" class="icon-hi" >
+                                                    <input type="hidden" id="icon-hidden" class="icon-hidden" value="hi">
+                                                </label>            
+                                            </span>
+                                        </div>
+
+					<textarea name="user" id="chat-message-input-u" class="chat-message-input-text" cols="30" rows="10" required></textarea>
+                                        <input id="chat-message-submit" class="chat-message-button" type="submit" value="Send" onclick="submit();"/>
+                                        
+                                        
+                                    </div>
+                                    
+                    </div>
+                    <!-- <div class="img-view">
+                            <div class="css-cancel"><a href="#"></a></div>
+                            <div class="preview_chat"></div>
+                            <div class="input-button">
+                                <p>まだ送信されていません！(Push Send)</p>
+                            </div>
+                        </div>
+                     -->
+            </div>
+            
+            {% else %}
+            <div class="main_room">
+                   
+                    <div class='chat_room_contents'>
+                            
+                                {% if chat %}
+                                    {% for talk in chat %}
+                                      {% for info in company_info %}
+                                        {% if info.company_name != talk.from_person %}  
+                                        
+                                        <div id="msg" class="msg_chat_li">
+                                            {% for user_info in view %}
+                                              <img src="{{user_info.image}}" alt="">
+                                            {% endfor %}
+                                          <ul>                                           
+                                              <li class="chat_msg fk"> 
+                                                  <textarea id="chat-other" >{{talk.chat}}</textarea>
+                                              </li>
+                                          </ul>
+                                        </div>  
+                                        {% endif %}
+                                        
+                                      {% endfor %}
+                                      {% for info in company_info %}
+                                        {% if info.company_name == talk.from_person %}
+                                        <div id="msg" class="msg-right cm">
+                                     
+                                            <ul id="chat_test cm">
+                                              
+                                                <li id='ontime cm' class="chat_msg right cm"> 
+                                                    <textarea readonly class="chat-log-right cm">{{talk.chat}}</textarea>
+                                                </li>
+                                                
+                                            </ul>
+                                   
+                                        </div>
+                                        {% endif %} 
+                                      {% endfor %}
+                                    {% endfor %}
+				   
+                                {% else %}
+                                 
+                                {% endif %}
+                                    <div class="chat_room">
+                                            
+					<textarea name="company" id="chat-message-input-c" class="chat-message-input-text" cols="30" rows="10" required></textarea>
+                                        <input id="chat-message-submit" class="chat-message-button" type="submit" value="Send" onclick="submit();" />  
+                                    </div>
+                                
+                    </div>
+            </div>
+            {% endif %}
+    </div>
+
+{% endblock %}
+
+

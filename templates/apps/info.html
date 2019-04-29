@@ -1,0 +1,104 @@
+{% extends 'company/base.html' %}
+{% load static %}
+
+{% block content %}
+
+
+<div class='content_main_info'>
+  {% for view_list in object_list %}
+  <div class='topic'>
+    <div class='back_botton'>
+      <a href="/roomii/{{get_params}}"><span class='css-cancel info'></span></a>
+    </div>
+    <div class='image_field'>
+      <div class='image_contents'>
+      {% for x in room_view %}
+        {% if "http://" not in x %}
+          <li><img src="/media/{{images.image}}" alt=""></li>
+        {% else %}
+          <li><img src="{{x}}" alt=""></li>
+        {% endif %}
+      {% endfor %}
+      
+      </div>
+      <div class='image_sub_contents'>
+      {% for images in room_view %}
+        {% if "http://" not in images %}
+        <li><img src="/media/{{images.image}}" alt=""></li>
+        {% else %}
+        <li><img src="{{images}}" alt=""></li>
+        {% endif %}
+      {% endfor %}
+      </div>
+    </div>
+      <table class="table">
+        <tbody>
+          <tr>
+              <th>空室状況</th>
+              {% if view_list.live_flag.vacancy_info == '0' %}
+                {% if view_list.live_flag.vacancy_live == "貸出可" %}
+                    <td>空室あり</td>
+                {% else %}
+                    <td>{{view_list.live_flag.vacancy_live}}</td>
+                {% endif %}
+              {% else %}
+                {% if view_list.live_flag.vacancy_live == "現在入居中" %}
+                    <td>空室なし({{view_list.live_flag.vacancy_live}})</td>
+                {% else %}
+                    <td>{{view_list.live_flag.vacancy_live}}</td>
+                {% endif %}
+              {% endif %}
+          </tr>
+          <tr>
+              <th>名称</th>
+              <td>{{view_list.article_name}}</td>
+          </tr>
+          <tr>
+              <th>住所</th>
+              <td>〒{{view_list.address_number}}</br>{{view_list.address}}</td>
+          </tr>
+          <tr>
+              <th>家賃</th>
+              <td>{{view_list.rent}}万円</td>
+          </tr>
+          <tr>
+              <th>駐車場</th>
+              <td>{{view_list.park}}</td>
+          </tr>
+          <tr>
+              <th>初期費用</th>
+              <td>{{view_list.initial_cost}}</td>
+          </tr>
+          <tr>
+            <th>階数</th>
+            <td>{{view_list.floor_number}}</td>
+          </tr>
+          <tr>
+              <th>間取り</th>
+              <td>{{view_list.floor_plan}}</td>
+          </tr>
+          <tr>
+              <th>共益費用</th>
+              <td>{{view_list.term_of_contract}}</td>
+          </tr>
+          <tr>
+              <th>その他</th>
+              <td>{{view_list.column}}</td>
+          </tr>
+        </tbody>
+    </table>
+    <div class='map'>
+        <div class='map_button'>
+            <a class="square_btn" target="_blank" href="{{view_list.map_url}}"> 地図</a>
+        </div>
+        <div class='map_button'>
+            <a class="square_btn" target="_blank" href="{{view_list.map_url_air}}"> 航空写真</a>
+        </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
+
+
